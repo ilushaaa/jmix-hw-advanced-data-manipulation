@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        xmlns:c="http://jmix.io/schema/ui/jpql-condition"
+        caption="msg://bookingBrowse.caption"
+        focusComponent="bookingsTable">
+    <data readOnly="true">
+        <collection id="bookingsDc"
+                    class="com.sample.hotel.entity.Booking">
+            <fetchPlan extends="_base">
+                <property name="client" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="bookingsDl">
+                <query>
+                    <![CDATA[select e from Booking e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="lookupSelectAction"
+                caption="msg:///actions.Select"
+                icon="LOOKUP_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="lookupCancelAction"
+                caption="msg:///actions.Cancel"
+                icon="LOOKUP_CANCEL"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="bookingsTable" spacing="true">
+        <filter id="filter"
+                dataLoader="bookingsDl">
+            <properties include=".*"/>
+        </filter>
+        <table id="bookingsTable"
+               width="100%"
+               dataContainer="bookingsDc">
+            <actions>
+                <action id="create" type="create"/>
+                <action id="edit" type="edit"/>
+                <action id="cancel" caption="msg://cancel.caption"/>
+            </actions>
+            <columns>
+                <column id="numberOfGuests"/>
+                <column id="arrivalDate"/>
+                <column id="nightsOfStay"/>
+                <column id="departureDate"/>
+                <column id="status"/>
+                <column id="client"/>
+                <column id="client.email"/>
+                <column id="client.telephone"/>
+                <column id="countdownDays" caption="msg://countdownDays.caption"/>
+            </columns>
+            <simplePagination/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn" action="bookingsTable.create"/>
+                <button id="editBtn" action="bookingsTable.edit"/>
+                <button id="bookingsTableCancelBtn" action="bookingsTable.cancel" icon="VALUEPICKER_CLEAR"/>
+            </buttonsPanel>
+        </table>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>

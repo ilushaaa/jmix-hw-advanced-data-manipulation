@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        xmlns:c="http://jmix.io/schema/ui/jpql-condition"
+        caption="msg://bookingRoomAssignment.caption"
+        focusComponent="bookingsTable">
+    <data readOnly="true">
+        <collection id="bookingsDc"
+                    class="com.sample.hotel.entity.Booking">
+            <fetchPlan extends="_base">
+                <property name="client" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="bookingsDl">
+                <query>
+                    <![CDATA[select e from Booking e where e.status = 'B' and e.roomReservation is null]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="roomDc" class="com.sample.hotel.entity.Room">
+            <fetchPlan extends="_base"/>
+            <loader id="roomDl">
+                <query>
+                    <![CDATA[select r from Room r]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="lookupSelectAction"
+                caption="msg:///actions.Select"
+                icon="LOOKUP_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="lookupCancelAction"
+                caption="msg:///actions.Cancel"
+                icon="LOOKUP_CANCEL"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="split" spacing="true">
+        <split orientation="vertical" width="100%" id="split">
+            <vbox spacing="true" height="100%" expand="bookingsTable" margin="false;false;true;false">
+                <label stylename="h3" value="Pending bookings"/>
+                <table id="bookingsTable"
+                       width="100%"
+                       dataContainer="bookingsDc">
+                    <actions>
+                        <action id="refresh" type="refresh"/>
+                    </actions>
+                    <columns>
+                        <column id="client"/>
+                        <column id="numberOfGuests"/>
+                        <column id="arrivalDate"/>
+                        <column id="departureDate"/>
+                        <column id="status"/>
+                        <column id="countdownDays" caption="msg://countdownDays.caption"/>
+                    </columns>
+                    <simplePagination/>
+                    <buttonsPanel id="buttonsPanel"
+                                  alwaysVisible="true">
+                        <button id="bookingsTableRefreshBtn" action="bookingsTable.refresh"/>
+                    </buttonsPanel>
+                </table>
+            </vbox>
+            <vbox spacing="true" expand="roomTable" margin="true;false;false;false" height="100%">
+                <label stylename="h3" value="Rooms"/>
+                <table id="roomTable" width="100%" dataContainer="roomDc">
+                    <columns>
+                        <column id="assign" caption="msg://assign.caption"/>
+                        <column id="number"/>
+                        <column id="floor"/>
+                        <column id="squareMeters"/>
+                        <column id="sleepingPlaces"/>
+                        <column id="safeDeposit"/>
+                        <column id="niceViewFromWindow"/>
+                        <column id="quiet"/>
+                        <column id="minibar"/>
+                        <column id="airConditioner"/>
+                    </columns>
+                </table>
+            </vbox>
+        </split>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>

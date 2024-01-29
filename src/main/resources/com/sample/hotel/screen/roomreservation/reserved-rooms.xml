@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        xmlns:c="http://jmix.io/schema/ui/jpql-condition"
+        caption="msg://roomReservationBrowse.caption"
+        focusComponent="roomReservationsTable">
+    <data readOnly="true">
+        <collection id="roomReservationsDc"
+                    class="com.sample.hotel.entity.RoomReservation">
+            <fetchPlan extends="_base">
+                <property name="booking" fetchPlan="_instance_name">
+                    <property name="client" fetchPlan="_instance_name">
+                        <property name="telephone"/>
+                    </property>
+                    <property name="numberOfGuests"/>
+                    <property name="arrivalDate"/>
+                    <property name="departureDate"/>
+                </property>
+                <property name="room" fetchPlan="_instance_name">
+                    <property name="floor"/>
+                </property>
+            </fetchPlan>
+            <loader id="roomReservationsDl">
+                <query>
+                    <![CDATA[select e from RoomReservation e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="lookupSelectAction"
+                caption="msg:///actions.Select"
+                icon="LOOKUP_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="lookupCancelAction"
+                caption="msg:///actions.Cancel"
+                icon="LOOKUP_CANCEL"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="roomReservationsTable" spacing="true">
+        <filter id="filter"
+                dataLoader="roomReservationsDl">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="roomReservationsTable"
+                    width="100%"
+                    dataContainer="roomReservationsDc">
+            <actions>
+                <action id="refresh" type="refresh"/>
+                <action id="viewClientEmail" caption="View client email" trackSelection="true"/>
+            </actions>
+            <columns>
+                <column id="room"/>
+                <column id="room.floor"/>
+                <column id="booking.arrivalDate"/>
+                <column id="booking.departureDate"/>
+                <column id="booking.numberOfGuests"/>
+                <column id="booking.client"/>
+                <column id="booking.client.telephone"/>
+            </columns>
+            <simplePagination/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="refreshBtn" action="roomReservationsTable.refresh"/>
+                <button id="roomReservationsTableViewClientBtn" action="roomReservationsTable.viewClientEmail"/>
+            </buttonsPanel>
+        </groupTable>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>
