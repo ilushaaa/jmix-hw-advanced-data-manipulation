@@ -52,9 +52,8 @@ public class BookingBrowse extends StandardLookup<Booking> {
     }
 
     private void cancelBooking(Booking booking) {
-        bookingService.cancelReservation(booking);
-        /*booking.setStatus(BookingStatus.CANCELLED);
-        Booking updated = dataManager.save(booking);
-        bookingsDc.replaceItem(updated);*/
+        booking.setStatus(BookingStatus.CANCELLED);
+        Booking updatedBooking = dataManager.save(booking);
+        bookingsDc.replaceItem(updatedBooking);
     }
 }

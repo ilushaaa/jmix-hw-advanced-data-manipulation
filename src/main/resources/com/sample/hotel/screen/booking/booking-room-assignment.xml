@@ -56,7 +56,7 @@
                         <column id="arrivalDate"/>
                         <column id="departureDate"/>
                         <column id="status"/>
-                        <column id="countdownDays" caption="msg://countdownDays.caption"/>
+                        <column id="countdownDays"/>
                     </columns>
                     <simplePagination/>
                     <buttonsPanel id="buttonsPanel"

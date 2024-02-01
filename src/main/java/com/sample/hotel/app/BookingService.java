@@ -11,9 +11,11 @@ import io.jmix.data.PersistenceHints;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BookingService {
@@ -72,30 +74,23 @@ public class BookingService {
      * @return created reservation object, or null if room is not suitable
      */
     @Transactional
+    @Nullable
     public RoomReservation reserveRoom(Booking booking, Room room) {
         if (isSuitable(booking, room)) {
             RoomReservation roomReservation = dataManager.create(RoomReservation.class);
             roomReservation.setRoom(room);
             roomReservation.setBooking(booking);
-            dataManager.save(roomReservation);
-            return roomReservation;
+            return dataManager.save(roomReservation);
         }
         return null;
     }
 
     @Transactional
     public void cancelReservation(Booking booking) {
-        List<RoomReservation> roomReservations = dataManager.load(RoomReservation.class)
+        Optional<RoomReservation> optional = dataManager.load(RoomReservation.class)
                 .query("select r from RoomReservation r where r.booking.id = :bookingId")
                 .parameter("bookingId", booking.getId())
-                .list();
-        if (roomReservations.isEmpty()) {
-            return;
-        }
-
-        dataManager.remove(roomReservations.get(0));
-
-        booking.setStatus(BookingStatus.CANCELLED);
-        dataManager.save(booking);
+                .optional();
+        optional.ifPresent(dataManager::remove);
     }
 }

@@ -54,7 +54,7 @@
                 <column id="client"/>
                 <column id="client.email"/>
                 <column id="client.telephone"/>
-                <column id="countdownDays" caption="msg://countdownDays.caption"/>
+                <column id="countdownDays"/>
             </columns>
             <simplePagination/>
             <buttonsPanel id="buttonsPanel"
